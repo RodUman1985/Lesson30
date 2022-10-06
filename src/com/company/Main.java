@@ -3,6 +3,7 @@ package com.company;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Random;
 
 public class Main {
 
@@ -31,9 +32,29 @@ public class Main {
       }
       // потоки и фаилы(чтение+запись)
         FileWriter fw=new FileWriter("1.txt");
-      Thread t1=new Thread(()->{});
+      Thread t1=new Thread(()->{
+          try {
+              synchronized (fw){
+              fw.write(" hello ");}
+          } catch (IOException e) {
+              e.printStackTrace();
+          }
+      });
+        Thread t2=new Thread(()->{
+            try {
+                synchronized (fw) {
+                    fw.write(" World!!! ");}
+                } catch(IOException e){
+                    e.printStackTrace();
 
-      fw.write("hello!!");
+            }
+
+        });
+     // fw.write("hello!!");
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
       fw.flush();
       fw.close();
         FileReader fr=new FileReader("1.txt");
@@ -45,6 +66,8 @@ public class Main {
         char first= s2.charAt(0);
         char last= s2.charAt(s2.length()-1);
         System.out.println(first+ "  "+last);
+        Random rand=new Random();
+        rand.nextInt(101);//0..100
 
 
     }
